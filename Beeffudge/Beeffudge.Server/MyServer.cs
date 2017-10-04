@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using ZeroMQ;
 
@@ -120,11 +121,6 @@ namespace Beeffudge.Server
                 msgPass.SetIP("*"); // Listen to all incoming;
                 msgPass.SetPort(PORT_MSG);
                 msgPass.Connect();
-
-                string chatMessage = string.Empty;
-                chatMessage = msgPass.GetMessage();
-
-                // Broadcast 'chatMessage':
             }
             #endregion REQUEST CHAT MESSAGE
         }
@@ -218,6 +214,7 @@ namespace Beeffudge.Server
             {
                 dictSockets[REQ_ANSWER].SendMessage("#answer#");
                 answer = dictSockets[REQ_ANSWER].GetMessage();
+                Console.WriteLine("Thread: " + answer);
 
                 // TODO: Evaluate answers!
             }
@@ -294,10 +291,26 @@ namespace Beeffudge.Server
         // Master (STARTER) method for our server:
         public void Start()
         {
+            // Create & configure sockets:
             Connect();
 
-            // TODO: For each REQUEST connection, create
-            // thread!
+            // Thread for requesting user's username:
+            Thread reqUserUsername = new Thread(() => GetPlayerUsername());
+            reqUserUsername.Start();
+
+            // Thread for requesting chat messages:
+            Thread reqChatMessageThread = new Thread(() => ReqChatMessage());
+            reqChatMessageThread.Start();
+
+            // Thread for requesting an answer for the question:
+            Thread reqAnswerThread = new Thread(() => ReqAnswer());
+            reqAnswerThread.Start();
+
+            // Thread for requesting picked choices:
+            Thread reqChoiceThread = new Thread(() => ReqChoice());
+            reqChoiceThread.Start();
+
+            // TODO: Add game logic calls below!
 
             // In question thread, use timer 
         }
