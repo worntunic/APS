@@ -137,7 +137,8 @@ namespace ZeroMQ
         /// <param name="addr"></param>
         public void SetIPAndPort(string addr, string port)
         {
-            if (Int32.TryParse(port, out int port_int))
+            int port_int;
+            if (Int32.TryParse(port, out /* int */ port_int))
                 _port = port;
             _IP = addr;
 
@@ -171,7 +172,8 @@ namespace ZeroMQ
         /// <param name="code"></param>
         public void SetSubscribeCode(string code)
         {
-            if (Int32.TryParse(code, out int c))
+            int c;
+            if (Int32.TryParse(code, out /* int */ c))
             {
                 _subscribeCode = code;
             }

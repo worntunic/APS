@@ -17,7 +17,8 @@ namespace Beeffudge
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1() /*Lobby()*/);
+            //Application.Run(new Form1() /*Lobby()*/);
+            Application.Run(new GameScreen());
         }
     }
 }
