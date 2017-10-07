@@ -18,39 +18,39 @@ namespace Beeffudge.Forms
     {
         // Socket IDs:
         // Publisher for received chat messages:
-        public const int SUB_CHAT = 0;
+        public static readonly int SUB_CHAT = 0;
         // Request for chat message (from single user):
-        public const int REP_CHAT_MSG = 1;
+        public static readonly int REP_CHAT_MSG = 1;
         // Publisher for questions:
-        public const int SUB_QUESTION = 2;
+        public static readonly int SUB_QUESTION = 2;
         // Request for typed answer on a question:
-        public const int REP_ANSWER = 4;
+        public static readonly int REP_ANSWER = 4;
         // Request for picked choice:
-        public const int REP_CHOICE = 8;
+        public static readonly int REP_CHOICE = 8;
         // Publisher for points:
-        public const int SUB_POINTS = 16;
+        public static readonly int SUB_POINTS = 16;
         // Request for player name:
-        public const int REP_PLAYER = 32;
+        public static readonly int REP_PLAYER = 32;
 
         // Ports:
         // Port # for chat message publishing:
-        public const string PORT_CHAT = "5555";
+        public static readonly string PORT_CHAT = "5555";
         // Port # for incoming chat messages:
-        public const string PORT_MSG = "5556";
+        public static readonly string PORT_MSG = "5556";
         // Port # for publishing questions:
-        public const string PORT_QUESTION = "5557";
+        public static readonly string PORT_QUESTION = "5557";
         // Port # for receiving an answer:
-        public const string PORT_ANSWER = "5558";
+        public static readonly string PORT_ANSWER = "5558";
         // Port # for receiving picked choice:
-        public const string PORT_CHOICE = "5559";
+        public static readonly string PORT_CHOICE = "5559";
         // Port # for publishing points:
-        public const string PORT_POINTS = "5560";
+        public static readonly string PORT_POINTS = "5560";
         // Port # for receiving player names:
-        public const string PORT_PLAYER = "5561";
+        public static readonly string PORT_PLAYER = "5561";
 
         // e.g. "Player1: 100;Player2: 300;Player3: etc."
-        private string Points = string.Empty;
-        private string[] Players;
+        public string Points = string.Empty;
+        public string[] Players;
 
         // Placeholder for our message workers:
         private Dictionary<int, MessagePassing> dictSockets
@@ -58,12 +58,12 @@ namespace Beeffudge.Forms
 
         public Dictionary<int, MessagePassing> DictSockets { get { return dictSockets;  } set { dictSockets = value; } }
 
-        private string Name { get; set; }
+        public string _Name { get; set; }
         private string IP { get; set; }
 
         public Lobby(string Name, string IP, bool showPlay = false)
         {
-            this.Name = Name;
+            this._Name = Name;
             this.IP = IP;
 
             InitializeComponent();
@@ -78,8 +78,13 @@ namespace Beeffudge.Forms
 
             // Turn on subscribers:
             Thread getPointsThread = new Thread(() => GetPoints());
+            getPointsThread.Start();
+
             Thread playButtonThread = new Thread(() => EnableDisablePlayButton());
+            playButtonThread.Start();
+
             Thread chatSubscriberThread = new Thread(() => SetChatSubscriber());
+            chatSubscriberThread.Start();
         }
 
         #region POINTS, GAME & PLAYBUTTON
@@ -142,7 +147,7 @@ namespace Beeffudge.Forms
             string dummy = dictSockets[REP_PLAYER].GetMessage();
 
             if (startGame.Equals(""))
-                dictSockets[REP_PLAYER].SendMessage(Name);
+                dictSockets[REP_PLAYER].SendMessage(_Name);
             // Start game:
             else
                 dictSockets[REP_PLAYER].SendMessage(startGame);
@@ -155,8 +160,13 @@ namespace Beeffudge.Forms
         // Own thread!
         private void SetChatSubscriber()
         {
+            string exit = string.Empty;
             while (true)
             {
+                exit = dictSockets[SUB_CHAT].GetMessage();
+                // Let the thread die when the game starts:
+                if (exit.Equals("#start#"))
+                    break;
                 txtChat.Text = txtChat.Text + dictSockets[SUB_CHAT].GetMessage() + Environment.NewLine;
             }
         }
@@ -165,7 +175,7 @@ namespace Beeffudge.Forms
         {
             string dummy = dictSockets[REP_CHAT_MSG].GetMessage();
             // Send as 'Name: msg'
-            dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", Name, txtSend.Text.ToString()));
+            dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", _Name, txtSend.Text.ToString()));
         }
 
         #endregion MESSAGING
@@ -243,7 +253,7 @@ namespace Beeffudge.Forms
         // TODO: Implement parameter passing between forms!
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            GameScreen gameScreen = new GameScreen();
+            GameScreen gameScreen = new GameScreen(this);
             StartGame();
             gameScreen.Show();
             Close();
