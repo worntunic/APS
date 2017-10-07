@@ -161,6 +161,9 @@ namespace Beeffudge.Forms {
 
         // TODO: Pozvati svaki put kad se runda zavrsi \i sledeci red ispod
         // i kada istekne tajmer i kada se ocekuje prikaz odgovora!
+        //
+        // Moguce da je GetMessage() blokirajuci! Pokrenuti u 
+        // posebnom thread-u ako treba!
         private void GetQuestionFromServer() {
             string question = string.Empty;
 
