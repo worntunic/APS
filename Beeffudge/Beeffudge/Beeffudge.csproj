@@ -68,11 +68,29 @@
     <Compile Include="Forms\GameScreen.Designer.cs">
       <DependentUpon>GameScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\HomeScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HomeScreen.Designer.cs">
+      <DependentUpon>HomeScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IPForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\IPForm.Designer.cs">
+      <DependentUpon>IPForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Lobby.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Lobby.designer.cs">
       <DependentUpon>Lobby.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Username.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Username.Designer.cs">
+      <DependentUpon>Username.cs</DependentUpon>
     </Compile>
     <Compile Include="MessagePassing\MessagePassing.cs" />
     <Compile Include="Program.cs" />
@@ -80,8 +98,17 @@
     <EmbeddedResource Include="Forms\GameScreen.resx">
       <DependentUpon>GameScreen.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HomeScreen.resx">
+      <DependentUpon>HomeScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\IPForm.resx">
+      <DependentUpon>IPForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Lobby.resx">
       <DependentUpon>Lobby.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Username.resx">
+      <DependentUpon>Username.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -28,15 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("        Player 1");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("        Player 2");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("        Player 3");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("        Player 4");
             this.lvPlayers = new System.Windows.Forms.ListView();
             this.txtChat = new System.Windows.Forms.TextBox();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.txtSend = new System.Windows.Forms.TextBox();
-            this.btnSend = new System.Windows.Forms.Button();
             this.lblReady = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnSend = new System.Windows.Forms.Button();
+            this.txtSend = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -45,12 +49,18 @@
             // 
             this.lvPlayers.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lvPlayers.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lvPlayers.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.lvPlayers.Location = new System.Drawing.Point(0, 0);
             this.lvPlayers.MultiSelect = false;
             this.lvPlayers.Name = "lvPlayers";
             this.lvPlayers.Size = new System.Drawing.Size(247, 725);
             this.lvPlayers.TabIndex = 0;
             this.lvPlayers.UseCompatibleStateImageBehavior = false;
+            this.lvPlayers.View = System.Windows.Forms.View.Tile;
             // 
             // txtChat
             // 
@@ -73,16 +83,19 @@
             this.btnExit.TabIndex = 0;
             this.btnExit.Text = "EXIT";
             this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnPlay
             // 
             this.btnPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPlay.Enabled = false;
             this.btnPlay.Location = new System.Drawing.Point(835, 12);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(175, 55);
             this.btnPlay.TabIndex = 1;
             this.btnPlay.Text = "PLAY";
             this.btnPlay.UseVisualStyleBackColor = true;
+            this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // panel1
             // 
@@ -91,10 +104,20 @@
             this.panel1.Controls.Add(this.btnExit);
             this.panel1.Controls.Add(this.btnPlay);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Enabled = false;
             this.panel1.Location = new System.Drawing.Point(247, 645);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1207, 80);
             this.panel1.TabIndex = 3;
+            // 
+            // lblReady
+            // 
+            this.lblReady.AutoSize = true;
+            this.lblReady.Location = new System.Drawing.Point(13, 31);
+            this.lblReady.Name = "lblReady";
+            this.lblReady.Size = new System.Drawing.Size(187, 17);
+            this.lblReady.TabIndex = 2;
+            this.lblReady.Text = "Waiting For Players / Ready!";
             // 
             // panel2
             // 
@@ -107,16 +130,6 @@
             this.panel2.Size = new System.Drawing.Size(1207, 57);
             this.panel2.TabIndex = 4;
             // 
-            // txtSend
-            // 
-            this.txtSend.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtSend.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSend.Location = new System.Drawing.Point(16, 14);
-            this.txtSend.Name = "txtSend";
-            this.txtSend.Size = new System.Drawing.Size(994, 30);
-            this.txtSend.TabIndex = 0;
-            // 
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -126,15 +139,17 @@
             this.btnSend.TabIndex = 1;
             this.btnSend.Text = "SEND";
             this.btnSend.UseVisualStyleBackColor = true;
+            this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
-            // lblReady
+            // txtSend
             // 
-            this.lblReady.AutoSize = true;
-            this.lblReady.Location = new System.Drawing.Point(13, 31);
-            this.lblReady.Name = "lblReady";
-            this.lblReady.Size = new System.Drawing.Size(187, 17);
-            this.lblReady.TabIndex = 2;
-            this.lblReady.Text = "Waiting For Players / Ready!";
+            this.txtSend.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSend.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSend.Location = new System.Drawing.Point(16, 14);
+            this.txtSend.Name = "txtSend";
+            this.txtSend.Size = new System.Drawing.Size(994, 30);
+            this.txtSend.TabIndex = 0;
             // 
             // Lobby
             // 

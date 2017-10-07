@@ -30,35 +30,35 @@ namespace Beeffudge.Server
 
         // Socket IDs:
         // Publisher for received chat messages:
-        private const int PUB_CHAT = 0;
+        public const int PUB_CHAT = 0;
         // Request for chat message (from single user):
-        private const int REQ_CHAT_MSG = 1;
+        public const int REQ_CHAT_MSG = 1;
         // Publisher for questions:
-        private const int PUB_QUESTION = 2;
+        public const int PUB_QUESTION = 2;
         // Request for typed answer on a question:
-        private const int REQ_ANSWER = 4;
+        public const int REQ_ANSWER = 4;
         // Request for picked choice:
-        private const int REQ_CHOICE = 8;
+        public const int REQ_CHOICE = 8;
         // Publisher for points:
-        private const int PUB_POINTS = 16;
+        public const int PUB_POINTS = 16;
         // Request for player name:
-        private const int REQ_PLAYER = 32;
+        public const int REQ_PLAYER = 32;
 
         // Ports:
         // Port # for chat message publishing:
-        private const string PORT_CHAT = "5555";
+        public const string PORT_CHAT = "5555";
         // Port # for incoming chat messages:
-        private const string PORT_MSG = "5556";
+        public const string PORT_MSG = "5556";
         // Port # for publishing questions:
-        private const string PORT_QUESTION = "5557";
+        public const string PORT_QUESTION = "5557";
         // Port # for receiving an answer:
-        private const string PORT_ANSWER = "5558";
+        public const string PORT_ANSWER = "5558";
         // Port # for receiving picked choice:
-        private const string PORT_CHOICE = "5559";
+        public const string PORT_CHOICE = "5559";
         // Port # for publishing points:
-        private const string PORT_POINTS = "5560";
+        public const string PORT_POINTS = "5560";
         // Port # for receiving player names:
-        private const string PORT_PLAYER = "5561";
+        public const string PORT_PLAYER = "5561";
 
         #endregion CONSTANTS
 

@@ -59,7 +59,7 @@ namespace ZeroMQ
      * mp.SendMessage("ACK");
      */
 
-    class MessagePassing
+    public class MessagePassing
     {
         public static readonly string PUB_SUB_QUESTION = "1111";
         public static readonly string PUB_SUB_MESSAGE = "2222";

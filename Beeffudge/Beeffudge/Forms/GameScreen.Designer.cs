@@ -37,13 +37,13 @@
             this.btnAnswer4 = new System.Windows.Forms.Button();
             this.btnAnswer5 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtChat
@@ -67,8 +67,8 @@
             this.panel1.Controls.Add(this.txtChat);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.panel1.MinimumSize = new System.Drawing.Size(0, 700);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.MinimumSize = new System.Drawing.Size(2, 700);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(273, 722);
             this.panel1.TabIndex = 2;
@@ -77,7 +77,7 @@
             // 
             this.txtChatSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtChatSend.Location = new System.Drawing.Point(18, 648);
-            this.txtChatSend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtChatSend.Margin = new System.Windows.Forms.Padding(4);
             this.txtChatSend.Name = "txtChatSend";
             this.txtChatSend.Size = new System.Drawing.Size(232, 22);
             this.txtChatSend.TabIndex = 3;
@@ -87,7 +87,7 @@
             this.btnChatSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnChatSend.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnChatSend.Location = new System.Drawing.Point(150, 678);
-            this.btnChatSend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnChatSend.Margin = new System.Windows.Forms.Padding(4);
             this.btnChatSend.Name = "btnChatSend";
             this.btnChatSend.Size = new System.Drawing.Size(100, 28);
             this.btnChatSend.TabIndex = 2;
@@ -102,7 +102,7 @@
             this.panel2.Controls.Add(this.txtAnswer);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(273, 660);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1099, 62);
             this.panel2.TabIndex = 3;
@@ -112,7 +112,7 @@
             this.btnEnterAnswer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEnterAnswer.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnEnterAnswer.Location = new System.Drawing.Point(947, 15);
-            this.btnEnterAnswer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnEnterAnswer.Margin = new System.Windows.Forms.Padding(4);
             this.btnEnterAnswer.Name = "btnEnterAnswer";
             this.btnEnterAnswer.Size = new System.Drawing.Size(131, 28);
             this.btnEnterAnswer.TabIndex = 4;
@@ -125,7 +125,7 @@
             this.txtAnswer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtAnswer.Location = new System.Drawing.Point(21, 18);
-            this.txtAnswer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtAnswer.Margin = new System.Windows.Forms.Padding(4);
             this.txtAnswer.Name = "txtAnswer";
             this.txtAnswer.Size = new System.Drawing.Size(918, 22);
             this.txtAnswer.TabIndex = 3;
@@ -151,7 +151,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAnswer1.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAnswer1.Location = new System.Drawing.Point(215, 99);
-            this.btnAnswer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAnswer1.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnswer1.MinimumSize = new System.Drawing.Size(205, 79);
             this.btnAnswer1.Name = "btnAnswer1";
             this.btnAnswer1.Size = new System.Drawing.Size(205, 87);
@@ -168,7 +168,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAnswer2.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAnswer2.Location = new System.Drawing.Point(637, 99);
-            this.btnAnswer2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAnswer2.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnswer2.MinimumSize = new System.Drawing.Size(205, 79);
             this.btnAnswer2.Name = "btnAnswer2";
             this.btnAnswer2.Size = new System.Drawing.Size(205, 87);
@@ -185,7 +185,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAnswer3.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAnswer3.Location = new System.Drawing.Point(426, 194);
-            this.btnAnswer3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAnswer3.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnswer3.MinimumSize = new System.Drawing.Size(205, 79);
             this.btnAnswer3.Name = "btnAnswer3";
             this.btnAnswer3.Size = new System.Drawing.Size(205, 87);
@@ -202,7 +202,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAnswer4.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAnswer4.Location = new System.Drawing.Point(215, 289);
-            this.btnAnswer4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAnswer4.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnswer4.MinimumSize = new System.Drawing.Size(205, 79);
             this.btnAnswer4.Name = "btnAnswer4";
             this.btnAnswer4.Size = new System.Drawing.Size(205, 87);
@@ -219,7 +219,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAnswer5.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.btnAnswer5.Location = new System.Drawing.Point(637, 289);
-            this.btnAnswer5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAnswer5.Margin = new System.Windows.Forms.Padding(4);
             this.btnAnswer5.MinimumSize = new System.Drawing.Size(205, 79);
             this.btnAnswer5.Name = "btnAnswer5";
             this.btnAnswer5.Size = new System.Drawing.Size(205, 87);
@@ -237,10 +237,24 @@
             this.panel3.Controls.Add(this.tableLayoutPanel1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel3.Margin = new System.Windows.Forms.Padding(4);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1372, 722);
             this.panel3.TabIndex = 11;
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel2.ColumnCount = 1;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.lblQuestion, 0, 0);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(294, 15);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1057, 144);
+            this.tableLayoutPanel2.TabIndex = 12;
             // 
             // tableLayoutPanel1
             // 
@@ -270,20 +284,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1057, 477);
             this.tableLayoutPanel1.TabIndex = 11;
             // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel2.ColumnCount = 1;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.lblQuestion, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(294, 15);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1057, 144);
-            this.tableLayoutPanel2.TabIndex = 12;
-            // 
             // GameScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -305,8 +305,8 @@
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
