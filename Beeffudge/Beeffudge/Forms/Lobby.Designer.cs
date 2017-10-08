@@ -55,9 +55,10 @@
             listViewItem3,
             listViewItem4});
             this.lvPlayers.Location = new System.Drawing.Point(0, 0);
+            this.lvPlayers.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lvPlayers.MultiSelect = false;
             this.lvPlayers.Name = "lvPlayers";
-            this.lvPlayers.Size = new System.Drawing.Size(247, 725);
+            this.lvPlayers.Size = new System.Drawing.Size(186, 589);
             this.lvPlayers.TabIndex = 0;
             this.lvPlayers.UseCompatibleStateImageBehavior = false;
             this.lvPlayers.View = System.Windows.Forms.View.Tile;
@@ -68,18 +69,20 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtChat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtChat.Location = new System.Drawing.Point(264, 12);
+            this.txtChat.Location = new System.Drawing.Point(198, 10);
+            this.txtChat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtChat.Multiline = true;
             this.txtChat.Name = "txtChat";
-            this.txtChat.Size = new System.Drawing.Size(1175, 557);
+            this.txtChat.Size = new System.Drawing.Size(882, 453);
             this.txtChat.TabIndex = 1;
             // 
             // btnExit
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExit.Location = new System.Drawing.Point(1016, 12);
+            this.btnExit.Location = new System.Drawing.Point(760, 10);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(175, 55);
+            this.btnExit.Size = new System.Drawing.Size(131, 45);
             this.btnExit.TabIndex = 0;
             this.btnExit.Text = "EXIT";
             this.btnExit.UseVisualStyleBackColor = true;
@@ -89,9 +92,10 @@
             // 
             this.btnPlay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPlay.Enabled = false;
-            this.btnPlay.Location = new System.Drawing.Point(835, 12);
+            this.btnPlay.Location = new System.Drawing.Point(624, 10);
+            this.btnPlay.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(175, 55);
+            this.btnPlay.Size = new System.Drawing.Size(131, 45);
             this.btnPlay.TabIndex = 1;
             this.btnPlay.Text = "PLAY";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -104,18 +108,19 @@
             this.panel1.Controls.Add(this.btnExit);
             this.panel1.Controls.Add(this.btnPlay);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(247, 645);
+            this.panel1.Location = new System.Drawing.Point(186, 524);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1207, 80);
+            this.panel1.Size = new System.Drawing.Size(904, 65);
             this.panel1.TabIndex = 3;
             // 
             // lblReady
             // 
             this.lblReady.AutoSize = true;
-            this.lblReady.Location = new System.Drawing.Point(13, 31);
+            this.lblReady.Location = new System.Drawing.Point(10, 25);
+            this.lblReady.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblReady.Name = "lblReady";
-            this.lblReady.Size = new System.Drawing.Size(187, 17);
+            this.lblReady.Size = new System.Drawing.Size(143, 13);
             this.lblReady.TabIndex = 2;
             this.lblReady.Text = "Waiting For Players / Ready!";
             // 
@@ -125,17 +130,19 @@
             this.panel2.Controls.Add(this.btnSend);
             this.panel2.Controls.Add(this.txtSend);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(247, 588);
+            this.panel2.Location = new System.Drawing.Point(186, 477);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1207, 57);
+            this.panel2.Size = new System.Drawing.Size(904, 47);
             this.panel2.TabIndex = 4;
             // 
             // btnSend
             // 
             this.btnSend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSend.Location = new System.Drawing.Point(1016, 14);
+            this.btnSend.Location = new System.Drawing.Point(760, 11);
+            this.btnSend.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(175, 30);
+            this.btnSend.Size = new System.Drawing.Size(131, 24);
             this.btnSend.TabIndex = 1;
             this.btnSend.Text = "SEND";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -146,21 +153,23 @@
             this.txtSend.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSend.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSend.Location = new System.Drawing.Point(16, 14);
+            this.txtSend.Location = new System.Drawing.Point(12, 11);
+            this.txtSend.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.txtSend.Name = "txtSend";
-            this.txtSend.Size = new System.Drawing.Size(994, 30);
+            this.txtSend.Size = new System.Drawing.Size(744, 26);
             this.txtSend.TabIndex = 0;
             // 
             // Lobby
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1454, 725);
+            this.ClientSize = new System.Drawing.Size(1090, 589);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.txtChat);
             this.Controls.Add(this.lvPlayers);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "Lobby";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Lobby";

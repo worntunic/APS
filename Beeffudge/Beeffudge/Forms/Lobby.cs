@@ -51,10 +51,12 @@ namespace Beeffudge.Forms
         // e.g. "Player1: 100;Player2: 300;Player3: etc."
         public string Points = string.Empty;
         public string[] Players;
-
+        public bool waitingToSend = false;
+        private bool playButtonEnabled = false;
         // Placeholder for our message workers:
         private Dictionary<int, MessagePassing> dictSockets
                 = new Dictionary<int, MessagePassing>();
+
 
         public Dictionary<int, MessagePassing> DictSockets { get { return dictSockets;  } set { dictSockets = value; } }
 
@@ -74,17 +76,26 @@ namespace Beeffudge.Forms
             SetupMessageWorkers();
 
             // Send your username to the server:
-            SendUsername();
+            Thread sendUsernameThread = new Thread(() => SendUsername());
+            sendUsernameThread.Start();
+            //SendUsername();
 
             // Turn on subscribers:
             Thread getPointsThread = new Thread(() => GetPoints());
             getPointsThread.Start();
 
-            Thread playButtonThread = new Thread(() => EnableDisablePlayButton());
-            playButtonThread.Start();
+            /*Thread playButtonThread = new Thread(() => EnableDisablePlayButton());
+            playButtonThread.Start();*/
 
             Thread chatSubscriberThread = new Thread(() => SetChatSubscriber());
             chatSubscriberThread.Start();
+
+            Thread chatThread = new Thread(() => SendChatMessage());
+            chatThread.Start();
+
+            Thread updatePlayerListThread = new Thread(() => UpdatePlayerList());
+            updatePlayerListThread.Start();
+
         }
 
         #region POINTS, GAME & PLAYBUTTON
@@ -94,17 +105,23 @@ namespace Beeffudge.Forms
             while (true)
             {
                 Points = dictSockets[SUB_POINTS].GetMessage();
+                EnableDisablePlayButton();
             }
         }
         
         // Own thread!
         private void EnableDisablePlayButton() {
-            int numbOfPlayers = 0;
-            btnPlay.Enabled = false;
-            while (numbOfPlayers < 2) {
-                numbOfPlayers = GetNumberOfPlayers();
+            /*int numbOfPlayers = 0;
+            btnPlay.Enabled = false;*/
+            int numberOfPlayers = GetNumberOfPlayers();
+            if (numberOfPlayers >= 1 && !playButtonEnabled) {
+                playButtonEnabled = true;
+                Invoke(new Action(() => {
+                    btnPlay.Enabled = true;
+                    btnPlay.Refresh();
+                }));
             }
-            btnPlay.Enabled = true;
+            
         }
 
         private void StartGame() {
@@ -117,7 +134,7 @@ namespace Beeffudge.Forms
 
         private int GetNumberOfPlayers()
         {
-            return GetPlayerNames().Length;
+            return GetPlayerNames().Length - 1;
         }
 
         // Converts names in Points to string array 
@@ -125,32 +142,47 @@ namespace Beeffudge.Forms
         private string[] GetPlayerNames()
         {
             string[] names = Points.Split(';');
-
-            for (int i = 0; i < names.Length; i++)
-            {
-                names[i] = names[i].Substring(0, names[i].IndexOf(':'));
+            if (Points != "") {
+                for (int i = 0; i < names.Length - 1; i++) {
+                    names[i] = names[i].Substring(0, names[i].IndexOf(':'));
+                }
             }
-
             return names;
+        }
+
+        private void UpdatePlayerList() {
+            while (true) {
+                SetPlayerList();
+            }
         }
 
         private void SetPlayerList() {
             string[] names = GetPlayerNames();
-            for (int i = 0; i < GetNumberOfPlayers(); i++) {
-                lvPlayers.Items[i].Text = names[i];
+            for (int i = 0; i < names.Length - 1; i++) {
+                if (!names[i].Equals("")) {
+                    Invoke(new Action(() =>
+                    {
+                        if (!lvPlayers.Items[i].Text.Equals(names[i])) {
+                            lvPlayers.Items[i].Text = names[i];
+                        }
+                    }));
+                }
             }
         }
 
         // Send username, or start game command:
         private void SendUsername(string startGame = "")
         {
-            string dummy = dictSockets[REP_PLAYER].GetMessage();
+            while (true) {
+                string dummy = dictSockets[REP_PLAYER].GetMessage();
 
-            if (startGame.Equals(""))
-                dictSockets[REP_PLAYER].SendMessage(_Name);
-            // Start game:
-            else
-                dictSockets[REP_PLAYER].SendMessage(startGame);
+                if (startGame.Equals(""))
+                    dictSockets[REP_PLAYER].SendMessage(_Name);
+                // Start game:
+                else
+                    dictSockets[REP_PLAYER].SendMessage(startGame);
+                Thread.Sleep(3000);
+            }
         }
 
         #endregion PLAYER
@@ -167,15 +199,24 @@ namespace Beeffudge.Forms
                 // Let the thread die when the game starts:
                 if (exit.Equals("#start#"))
                     break;
-                txtChat.Text = txtChat.Text + dictSockets[SUB_CHAT].GetMessage() + Environment.NewLine;
+                txtChat.Text = txtChat.Text + exit + Environment.NewLine;
             }
         }
 
         private void SendChatMessage()
         {
-            string dummy = dictSockets[REP_CHAT_MSG].GetMessage();
-            // Send as 'Name: msg'
-            dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", _Name, txtSend.Text.ToString()));
+            while (true) {
+                string dummy = dictSockets[REP_CHAT_MSG].GetMessage();
+                // Send as 'Name: msg'
+                if (waitingToSend) {
+                    dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", _Name, txtSend.Text.ToString()));
+                    txtSend.Clear();
+                    txtSend.Focus();
+                    waitingToSend = false;
+                } else {
+                    dictSockets[REP_CHAT_MSG].SendMessage("");
+                }
+            }
         }
 
         #endregion MESSAGING
@@ -185,6 +226,7 @@ namespace Beeffudge.Forms
         private void SetupMessageWorkers()
         {
             dictSockets.Add(SUB_CHAT, new MessagePassing(MessagePassing.SUBSCRIBER));
+            dictSockets.Add(SUB_POINTS, new MessagePassing(MessagePassing.SUBSCRIBER));
             dictSockets.Add(REP_CHAT_MSG, new MessagePassing(MessagePassing.REPLY));
             dictSockets.Add(REP_ANSWER, new MessagePassing(MessagePassing.REPLY));
             dictSockets.Add(SUB_QUESTION, new MessagePassing(MessagePassing.SUBSCRIBER));
@@ -197,6 +239,7 @@ namespace Beeffudge.Forms
             SetupQuestionSUB();
             SetupChoiceREP();
             SetupPlayerREP();
+            SetupPointsSUB();
         }
 
         private void SetupPlayerREP()
@@ -217,6 +260,7 @@ namespace Beeffudge.Forms
         {
             dictSockets[SUB_QUESTION].SetIP(IP);
             dictSockets[SUB_QUESTION].SetPort(PORT_QUESTION);
+            dictSockets[SUB_QUESTION].SetSubscribeCode(MessagePassing.PUB_SUB_QUESTION);
             dictSockets[SUB_QUESTION].Connect();
         }
 
@@ -238,7 +282,16 @@ namespace Beeffudge.Forms
         {
             dictSockets[SUB_CHAT].SetIP(IP);
             dictSockets[SUB_CHAT].SetPort(PORT_CHAT);
+            dictSockets[SUB_CHAT].SetSubscribeCode(MessagePassing.PUB_SUB_MESSAGE);
             dictSockets[SUB_CHAT].Connect();
+        }
+
+        private void SetupPointsSUB() 
+        {
+            dictSockets[SUB_POINTS].SetIP(IP);
+            dictSockets[SUB_POINTS].SetPort(PORT_POINTS);
+            dictSockets[SUB_POINTS].SetSubscribeCode(MessagePassing.PUB_SUB_POINTS);
+            dictSockets[SUB_POINTS].Connect();
         }
 
         #endregion SOCKET SETUP
@@ -254,6 +307,7 @@ namespace Beeffudge.Forms
         private void btnPlay_Click(object sender, EventArgs e)
         {
             GameScreen gameScreen = new GameScreen(this);
+            this.Hide();
             StartGame();
             gameScreen.Show();
             Close();
@@ -262,9 +316,9 @@ namespace Beeffudge.Forms
         private void btnSend_Click(object sender, EventArgs e)
         {
             // Send message as: 'Username: msg'
-            SendChatMessage();
-            txtSend.Clear();
-            txtSend.Focus();
+            waitingToSend = true;
+            //SendChatMessage();
+
         }
 
         #endregion BUTTON CONTROLS

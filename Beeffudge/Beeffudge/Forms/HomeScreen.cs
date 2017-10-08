@@ -13,14 +13,14 @@ namespace Beeffudge.Forms
 {
     public partial class HomeScreen : Form
     {
-        private string Name { get; set; }
+        private string _Name { get; set; }
         private string IP { get; set; }
 
         public HomeScreen()
         {
             InitializeComponent();
 
-            Name = GetUsername();
+            _Name = GetUsername();
             IP = GetIP();
         }
 
@@ -32,7 +32,7 @@ namespace Beeffudge.Forms
         private string GetUsername()
         {
             UsernameForm userForm = new UsernameForm();
-            userForm.MdiParent = this;
+            //userForm.MdiParent = this;
             userForm.ShowDialog();
 
             return userForm.UsernameProp;
@@ -48,15 +48,19 @@ namespace Beeffudge.Forms
         private void btnHostGame_Click(object sender, EventArgs e)
         {
             // Show 'PLAY' button = true:
-            Lobby lobby = new Lobby(Name, IP, true);
-            lobby.MdiParent = this;
+            Lobby lobby = new Lobby(_Name, IP, true);
+            this.Hide();
+            //this.IsMdiContainer = true;
+            //lobby.MdiParent = this;
             lobby.Show();
         }
         
         private void btnJoinGame_Click(object sender, EventArgs e)
         {
-            Lobby lobby = new Lobby(Name, IP);
-            lobby.MdiParent = this;
+            Lobby lobby = new Lobby(_Name, IP);
+            this.Hide();
+            //this.IsMdiContainer = true;
+            //lobby.MdiParent = this;
             lobby.Show();
         }
     }

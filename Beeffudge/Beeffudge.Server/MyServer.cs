@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Beeffudge.Server.GameLogic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,6 +60,8 @@ namespace Beeffudge.Server
         public const string PORT_POINTS = "5560";
         // Port # for receiving player names:
         public const string PORT_PLAYER = "5561";
+
+        public GameLogic.GameController gameController;
 
         #endregion CONSTANTS
 
@@ -199,10 +202,11 @@ namespace Beeffudge.Server
 
             // Slanje:
             // ili neki laksi format za parsiranje.
-            string question = "Q:Ko je ____ ? A:PR1, W:LIE1... ";
+            //string question = "Q:Ko je ____ ? A:PR1, W:LIE1... ";
+            string question = gameController.askQuestion();
 
             // Broadcast question
-            dictSockets[PUB_QUESTION].SendMessage(question);
+            dictSockets[PUB_QUESTION].SendMessage(MessagePassing.PUB_SUB_QUESTION + " " + question);
         }
 
         private void ReqAnswer()
@@ -210,14 +214,25 @@ namespace Beeffudge.Server
 
             // TODO: Own thread!
             string answer = "name: answer";
+
             while (true)
             {
                 dictSockets[REQ_ANSWER].SendMessage("#answer#");
                 answer = dictSockets[REQ_ANSWER].GetMessage();
+                Answer newAnswer = LitJson.JsonMapper.ToObject<Answer>(answer);
+                gameController.answerQuestion(newAnswer);
+
                 Console.WriteLine("Thread: " + answer);
 
                 // TODO: Evaluate answers!
             }
+        }
+
+        private void PublishQuestionWithAnswers() {
+            QA newQA = gameController.questionsAsked.Last();
+            string question = LitJson.JsonMapper.ToJson(newQA);
+
+            dictSockets[PUB_QUESTION].SendMessage(MessagePassing.PUB_SUB_QUESTION + " " + question);
         }
 
         private void ReqChoice()
@@ -228,6 +243,8 @@ namespace Beeffudge.Server
             {
                 dictSockets[REQ_CHOICE].SendMessage("#choice#");
                 choice = dictSockets[REQ_CHOICE].GetMessage();
+                PlayerAnswer plrAnswer = LitJson.JsonMapper.ToObject<PlayerAnswer>(choice);
+                gameController.selectQuestion(plrAnswer);
             }
         }
 
@@ -241,6 +258,7 @@ namespace Beeffudge.Server
             // TODO: Own thread!
             while (true)
             {
+                
                 dictSockets[REQ_CHAT_MSG].SendMessage("#msg#");
                 string msg = dictSockets[REQ_CHAT_MSG].GetMessage();
 
@@ -257,7 +275,11 @@ namespace Beeffudge.Server
         {
             // add username somehow e.g. 'name: msg'
             // TODO: Username should be posted with the message!
-            dictSockets[PUB_CHAT].SendMessage(msg);
+            if (msg.Equals("#start#")) {
+                gameController.tryStartGame();
+            } else if (!msg.Equals("")) {
+                dictSockets[PUB_CHAT].SendMessage(MessagePassing.PUB_SUB_MESSAGE + " " + msg);
+            }
         }
 
         #endregion CHAT MESSENGER
@@ -268,9 +290,19 @@ namespace Beeffudge.Server
         // name1: #
         // name2: #
         // etc.
+
+        private void ReqPoints() {
+            while(true) {
+                //Console.WriteLine(gameController.calculateCurrentScoreboard());
+                PublishScore(gameController.calculateCurrentScoreboard());
+                Thread.Sleep(1500);
+            }
+        }
+
         private void PublishScore(string score)
         {
-            dictSockets[PUB_POINTS].SendMessage(score);
+            //string scoreString = "plr1: 100;plr2: 300;"
+            dictSockets[PUB_POINTS].SendMessage(MessagePassing.PUB_SUB_POINTS + " " + score);
         }
 
         private void GetPlayerUsername()
@@ -282,8 +314,15 @@ namespace Beeffudge.Server
                 // and send it. Keep the socket listening for new arrivals:
                 dictSockets[REQ_PLAYER].SendMessage("#username#");
                 string username = dictSockets[REQ_PLAYER].GetMessage();
+                if (username.Equals("#start#")) {
+                    dictSockets[PUB_CHAT].SendMessage(username);
+                } else {
+                    // Adding player to our game
+                    gameController.tryAddPlayer(username);
+                }
             }
         }
+
 
         #endregion SCORE & USERNAME
 
@@ -293,7 +332,7 @@ namespace Beeffudge.Server
         {
             // Create & configure sockets:
             Connect();
-
+            gameController = GameLogic.GameController.createGame();
             // Thread for requesting user's username:
             Thread reqUserUsername = new Thread(() => GetPlayerUsername());
             reqUserUsername.Start();
@@ -310,6 +349,9 @@ namespace Beeffudge.Server
             Thread reqChoiceThread = new Thread(() => ReqChoice());
             reqChoiceThread.Start();
 
+            // Thread for requesting points
+            Thread reqPointsThread = new Thread(() => ReqPoints());
+            reqPointsThread.Start();
             // TODO: Add game logic calls below!
 
             // In question thread, use timer 

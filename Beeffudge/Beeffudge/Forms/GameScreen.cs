@@ -35,6 +35,7 @@ namespace Beeffudge.Forms {
             Thread chatSubscribeThread = new Thread(() => UpdateChat());
             chatSubscribeThread.Start();
 
+
             // Prvi put uzmemo pitanje i odgovore od servera:
             GetQuestionFromServer();
         }
