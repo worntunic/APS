@@ -26,7 +26,7 @@ namespace Beeffudge.Forms
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Close();
+            Dispose();
         }
 
         private string GetUsername()

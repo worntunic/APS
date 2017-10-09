@@ -71,29 +71,52 @@ namespace Beeffudge.Server
         private Dictionary<int, MessagePassing> dictSockets
                 = new Dictionary<int, MessagePassing>();
 
+        private Logger logger = new Logger();
+
         #endregion PRIVATE VARIABLES
 
         #region CONNECTION
 
         void Connect()
         {
-            // Create and add our needed message workers:
-            dictSockets.Add(PUB_CHAT, new MessagePassing(MessagePassing.PUBLISHER));
-            dictSockets.Add(REQ_CHAT_MSG, new MessagePassing(MessagePassing.REQUEST));
-            dictSockets.Add(PUB_QUESTION, new MessagePassing(MessagePassing.PUBLISHER));
-            dictSockets.Add(REQ_ANSWER, new MessagePassing(MessagePassing.REQUEST));
-            dictSockets.Add(REQ_CHOICE, new MessagePassing(MessagePassing.REQUEST));
-            dictSockets.Add(PUB_POINTS, new MessagePassing(MessagePassing.PUBLISHER));
-            dictSockets.Add(REQ_PLAYER, new MessagePassing(MessagePassing.REQUEST));
+            try
+            {
+                // Create and add our needed message workers:
+                dictSockets.Add(PUB_CHAT, new MessagePassing(MessagePassing.PUBLISHER));
+                logger.LogToConsole("PUB_CHAT", "Socket created for PUBLISHER.");
+                dictSockets.Add(REQ_CHAT_MSG, new MessagePassing(MessagePassing.REQUEST));
+                logger.LogToConsole("REQ_CHAT_MSG", "Socket created for REQUEST.");
+                dictSockets.Add(PUB_QUESTION, new MessagePassing(MessagePassing.PUBLISHER));
+                logger.LogToConsole("PUB_QUESTION", "Socket created for PUBLISHER.");
+                dictSockets.Add(REQ_ANSWER, new MessagePassing(MessagePassing.REQUEST));
+                logger.LogToConsole("REQ_ANSWER", "Socket created for REQUEST.");
+                dictSockets.Add(REQ_CHOICE, new MessagePassing(MessagePassing.REQUEST));
+                logger.LogToConsole("REQ_CHOICE", "Socket created for REQUEST.");
+                dictSockets.Add(PUB_POINTS, new MessagePassing(MessagePassing.PUBLISHER));
+                logger.LogToConsole("PUB_POINTS", "Socket created for PUBLISHER.");
+                dictSockets.Add(REQ_PLAYER, new MessagePassing(MessagePassing.REQUEST));
+                logger.LogToConsole("REQ_PLAYER", "Socket created for REQUEST.");
 
-            // Setup our message workers:
-            SetupPlayer();
-            SetupChatPUB();
-            SetupChatREQ();
-            SetupQuestionPUB();
-            SetupAnswerREQ();
-            SetupChoiceREQ();
-            SetupPointsPUB();
+                // Setup our message workers:
+                SetupPlayer();
+                logger.LogToConsole("REQ_PLAYER", "Socket connection established!");
+                SetupChatPUB();
+                logger.LogToConsole("PUB_CHAT", "Socket connection established!");
+                SetupChatREQ();
+                logger.LogToConsole("REQ_CHAT_MSG", "Socket connection established!");
+                SetupQuestionPUB();
+                logger.LogToConsole("PUB_QUESTION", "Socket connection established!");
+                SetupAnswerREQ();
+                logger.LogToConsole("REQ_ANSWER", "Socket connection established!");
+                SetupChoiceREQ();
+                logger.LogToConsole("REQ_CHOICE", "Socket connection established!");
+                SetupPointsPUB();
+                logger.LogToConsole("PUB_POINTS", "Socket connection established!");
+            }
+            catch (Exception e) {
+                logger.LogToConsole("EXCEPTION - \"Connect()\"", e.ToString());
+                logger.CloseFile();
+            }
         }
 
         #endregion CONNECTION
@@ -207,6 +230,8 @@ namespace Beeffudge.Server
 
             // Broadcast question
             dictSockets[PUB_QUESTION].SendMessage(MessagePassing.PUB_SUB_QUESTION + " " + question);
+            logger.LogToConsole("PUB_QUESTION", "Sending question: " 
+                + MessagePassing.PUB_SUB_QUESTION + " " + question);
         }
 
         private void ReqAnswer()
@@ -222,7 +247,7 @@ namespace Beeffudge.Server
                 Answer newAnswer = LitJson.JsonMapper.ToObject<Answer>(answer);
                 gameController.answerQuestion(newAnswer);
 
-                Console.WriteLine("Thread: " + answer);
+                logger.LogToConsole("Thread REQ_ANSWER", "Got answer: " + answer);
 
                 // TODO: Evaluate answers!
             }
@@ -233,6 +258,7 @@ namespace Beeffudge.Server
             string question = LitJson.JsonMapper.ToJson(newQA);
 
             dictSockets[PUB_QUESTION].SendMessage(MessagePassing.PUB_SUB_QUESTION + " " + question);
+            logger.LogToConsole("PUB_QUESTION", MessagePassing.PUB_SUB_QUESTION + " " + question);
         }
 
         private void ReqChoice()
@@ -243,6 +269,7 @@ namespace Beeffudge.Server
             {
                 dictSockets[REQ_CHOICE].SendMessage("#choice#");
                 choice = dictSockets[REQ_CHOICE].GetMessage();
+                logger.LogToConsole("Thread REQ_CHOICE", "Got choice: " + choice);
                 PlayerAnswer plrAnswer = LitJson.JsonMapper.ToObject<PlayerAnswer>(choice);
                 gameController.selectQuestion(plrAnswer);
             }
@@ -261,13 +288,15 @@ namespace Beeffudge.Server
                 
                 dictSockets[REQ_CHAT_MSG].SendMessage("#msg#");
                 string msg = dictSockets[REQ_CHAT_MSG].GetMessage();
-
-                if (msg.Equals("START"))
+                if (msg.Equals(""))
                 {
-                    // TODO: Start game!
+
                 }
                 else
+                {
                     PublishChatMessage(msg);
+                    logger.LogToConsole("Thread REQ_CHAT_MSG", "Get message: " + msg);
+                }
             }
         }
 
@@ -277,8 +306,11 @@ namespace Beeffudge.Server
             // TODO: Username should be posted with the message!
             if (msg.Equals("#start#")) {
                 gameController.tryStartGame();
+                logger.LogToConsole("GameController", "TryStartGame()");
             } else if (!msg.Equals("")) {
                 dictSockets[PUB_CHAT].SendMessage(MessagePassing.PUB_SUB_MESSAGE + " " + msg);
+                logger.LogToConsole("PUB_CHAT", "Sending message: " 
+                    + MessagePassing.PUB_SUB_MESSAGE + " " + msg);
             }
         }
 
@@ -314,8 +346,10 @@ namespace Beeffudge.Server
                 // and send it. Keep the socket listening for new arrivals:
                 dictSockets[REQ_PLAYER].SendMessage("#username#");
                 string username = dictSockets[REQ_PLAYER].GetMessage();
+                logger.LogToConsole("Thread REQ_PLAYER", "Got username: " + username);
                 if (username.Equals("#start#")) {
                     dictSockets[PUB_CHAT].SendMessage(username);
+                    logger.LogToConsole("Thread REQ_PLAYER/PUB_CHAT", "Message broadcast: " + username);
                 } else {
                     // Adding player to our game
                     gameController.tryAddPlayer(username);
@@ -330,31 +364,45 @@ namespace Beeffudge.Server
         // Master (STARTER) method for our server:
         public void Start()
         {
-            // Create & configure sockets:
-            Connect();
-            gameController = GameLogic.GameController.createGame();
-            // Thread for requesting user's username:
-            Thread reqUserUsername = new Thread(() => GetPlayerUsername());
-            reqUserUsername.Start();
+            try
+            {
+                // Create & configure sockets:
+                Connect();
+                gameController = GameLogic.GameController.createGame();
+                logger.LogToConsole("GameController", "Game controller created!");
 
-            // Thread for requesting chat messages:
-            Thread reqChatMessageThread = new Thread(() => ReqChatMessage());
-            reqChatMessageThread.Start();
+                // Thread for requesting user's username:
+                Thread reqUserUsername = new Thread(() => GetPlayerUsername());
+                reqUserUsername.Start();
+                logger.LogToConsole("Thread REQ_PLAYER", "Thread started.");
 
-            // Thread for requesting an answer for the question:
-            Thread reqAnswerThread = new Thread(() => ReqAnswer());
-            reqAnswerThread.Start();
+                // Thread for requesting chat messages:
+                Thread reqChatMessageThread = new Thread(() => ReqChatMessage());
+                reqChatMessageThread.Start();
+                logger.LogToConsole("Thread REQ_CHAT_MSG", "Thread started.");
 
-            // Thread for requesting picked choices:
-            Thread reqChoiceThread = new Thread(() => ReqChoice());
-            reqChoiceThread.Start();
+                // Thread for requesting an answer for the question:
+                Thread reqAnswerThread = new Thread(() => ReqAnswer());
+                reqAnswerThread.Start();
+                logger.LogToConsole("Thread REQ_ANSWER", "Thread started.");
 
-            // Thread for requesting points
-            Thread reqPointsThread = new Thread(() => ReqPoints());
-            reqPointsThread.Start();
-            // TODO: Add game logic calls below!
+                // Thread for requesting picked choices:
+                Thread reqChoiceThread = new Thread(() => ReqChoice());
+                reqChoiceThread.Start();
+                logger.LogToConsole("Thread REQ_CHOICE", "Thread started.");
 
-            // In question thread, use timer 
+                // Thread for requesting points
+                Thread reqPointsThread = new Thread(() => ReqPoints());
+                reqPointsThread.Start();
+                logger.LogToConsole("Thread PUB_POINTS", "Thread started.");
+                // TODO: Add game logic calls below!
+
+                // In question thread, use timer 
+            }
+            catch (Exception e) {
+                logger.LogToConsole("EXCEPTION - \"Start()\"", e.ToString());
+                logger.CloseFile();
+            }
         }
     }
 }

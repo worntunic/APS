@@ -32,9 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="clrzmq">
-      <HintPath>..\..\..\..\..\..\..\..\+Nj\[C#] Projects\ZeroMQ\ZeroMQ\bin\Debug\clrzmq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="clrzmq, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\+Nj\[C#] Projects\ZeroMQ\ZeroMQ_Server\bin\Debug\clrzmq.dll</HintPath>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>..\..\..\..\..\media library\image upload test\MLImageUpload\MLImageUpload\MLImageUpload\LitJson.dll</HintPath>
@@ -54,6 +54,7 @@
     <Compile Include="GameLogic\GameObjects\Player.cs" />
     <Compile Include="GameLogic\GameObjects\Question.cs" />
     <Compile Include="GameLogic\Utils.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MessagePassing\MessagePassing.cs" />
     <Compile Include="MyServer.cs" />
     <Compile Include="Program.cs" />
@@ -63,8 +64,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="clrzmq.dll" />
-    <Content Include="libzmq.dll" />
     <Content Include="LitJson.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

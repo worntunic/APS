@@ -179,7 +179,7 @@ namespace ZeroMQ {
                 // Connect your socket to the 
                 // desired 'IP:Port address':
                 _socket.Connect(_RIP);
-
+                
                 // Subscribe to the desired code (id) to
                 // receive messages from:
                 if (_type == SUBSCRIBER) {
