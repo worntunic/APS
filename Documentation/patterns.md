@@ -6,4 +6,8 @@ Za razvoj aplikacije je korišćen programski jezik C#. U razvoju same aplikacij
 
 ## Observer
 
+Observer prati kada pristignu čet poruke, i ažurira korisnički interfejs dodavanjem poruke.
+
 ## Adapter
+
+Kako bismo prilagodili ZeroMq biblioteku potrebama našeg servera, iskoristili smo obrazac Adapter.
