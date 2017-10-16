@@ -52,13 +52,20 @@ namespace Beeffudge.Forms
         public string Points = string.Empty;
         public string[] Players;
         public bool waitingToSend = false;
+        public string chatTextToSend = "";
+        private bool shouldStartGame = false;
         private bool playButtonEnabled = false;
+        private bool closeThreads = false;
+        private bool isHost;
+        public TextBox chatWindow;
+        public TextBox chatSendBox;
         // Placeholder for our message workers:
         private Dictionary<int, MessagePassing> dictSockets
                 = new Dictionary<int, MessagePassing>();
 
-
         public Dictionary<int, MessagePassing> DictSockets { get { return dictSockets;  } set { dictSockets = value; } }
+
+        private Thread updatePlayerListThread;
 
         public string _Name { get; set; }
         private string IP { get; set; }
@@ -70,6 +77,9 @@ namespace Beeffudge.Forms
 
             InitializeComponent();
 
+            chatWindow = this.txtChat;
+            chatSendBox = this.txtSend;
+            isHost = showPlay;
             btnPlay.Visible = showPlay;
 
             // Socket setup:
@@ -93,7 +103,7 @@ namespace Beeffudge.Forms
             Thread chatThread = new Thread(() => SendChatMessage());
             chatThread.Start();
 
-            Thread updatePlayerListThread = new Thread(() => UpdatePlayerList());
+            updatePlayerListThread = new Thread(() => UpdatePlayerList());
             updatePlayerListThread.Start();
 
         }
@@ -113,19 +123,21 @@ namespace Beeffudge.Forms
         private void EnableDisablePlayButton() {
             /*int numbOfPlayers = 0;
             btnPlay.Enabled = false;*/
-            int numberOfPlayers = GetNumberOfPlayers();
-            if (numberOfPlayers >= 1 && !playButtonEnabled) {
-                playButtonEnabled = true;
-                Invoke(new Action(() => {
-                    btnPlay.Enabled = true;
-                    btnPlay.Refresh();
-                }));
+            if (isHost) {
+                int numberOfPlayers = GetNumberOfPlayers();
+                if (numberOfPlayers >= 2 && !playButtonEnabled) {
+                    playButtonEnabled = true;
+                    Invoke(new Action(() => {
+                        btnPlay.Enabled = true;
+                        btnPlay.Refresh();
+                    }));
+                }
             }
             
         }
 
         private void StartGame() {
-            SendUsername("#start#");
+            //SendUsername("#start#");
         }
 
         #endregion POINTS, GAME & PLAYBUTTON
@@ -151,7 +163,7 @@ namespace Beeffudge.Forms
         }
 
         private void UpdatePlayerList() {
-            while (true) {
+            while (/* true */ !closeThreads) {
                 SetPlayerList();
             }
         }
@@ -197,10 +209,24 @@ namespace Beeffudge.Forms
             {
                 exit = dictSockets[SUB_CHAT].GetMessage();
                 // Let the thread die when the game starts:
-                if (exit.Equals("#start#"))
-                    break;
-                txtChat.Text = txtChat.Text + exit + Environment.NewLine;
+                if (exit.Equals("#start#")) {
+                    closeThreads = true;
+                    Invoke(new Action(() => {
+                        ShowGameScreen();
+                    }));                    
+                    //break;
+                }
+                Invoke(new Action(() =>
+                {
+                    chatWindow.Text = chatWindow.Text + exit + Environment.NewLine;
+                }));
+                
             }
+        }
+
+        public void PrepareChatMessage (string messageText) {
+            waitingToSend = true;
+            chatTextToSend = messageText;
         }
 
         private void SendChatMessage()
@@ -208,11 +234,23 @@ namespace Beeffudge.Forms
             while (true) {
                 string dummy = dictSockets[REP_CHAT_MSG].GetMessage();
                 // Send as 'Name: msg'
-                if (waitingToSend) {
-                    dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", _Name, txtSend.Text.ToString()));
-                    txtSend.Clear();
-                    txtSend.Focus();
+                if (shouldStartGame) {
+                    dictSockets[REP_CHAT_MSG].SendMessage("#start#");
+                    shouldStartGame = false;
+                } else if (waitingToSend) {
+                    /*string message = ;
+                    Invoke(new Action(() =>
+                    {
+                        message = txtSend.Text.ToString();
+                    }));*/
+                    dictSockets[REP_CHAT_MSG].SendMessage(string.Format("{0}: {1}", _Name, chatTextToSend));
+                    Invoke(new Action(() => {
+                        chatSendBox.Clear();
+                        chatSendBox.Focus();
+                    }));
+                    
                     waitingToSend = false;
+                    chatTextToSend = "";
                 } else {
                     dictSockets[REP_CHAT_MSG].SendMessage("");
                 }
@@ -306,21 +344,34 @@ namespace Beeffudge.Forms
         // TODO: Implement parameter passing between forms!
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            GameScreen gameScreen = new GameScreen(this);
-            this.Hide();
-            StartGame();
-            gameScreen.Show();
-            Close();
+
+            shouldStartGame = true;
+            //Close();
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
             // Send message as: 'Username: msg'
-            waitingToSend = true;
+            //waitingToSend = true;
+            string message = "";
+            Invoke(new Action(() => {
+                message = txtSend.Text.ToString();
+            }));
+            PrepareChatMessage(message);
             //SendChatMessage();
+            //
+        }
 
+        private void ShowGameScreen() {
+            updatePlayerListThread.Abort();
+            GameScreen gameScreen = new GameScreen(this);
+            this.Hide();
+            StartGame();
+            gameScreen.Show();
+            //Close();
         }
 
         #endregion BUTTON CONTROLS
+
     }
 }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Timers;
-using Beeffudge.Server.GameLogic.GameObjects;
+using Beeffudge.GameLogic.GameObjects;
 using LitJson;
 
-namespace Beeffudge.Server.GameLogic {
+namespace Beeffudge.GameLogic {
 
     public class Answer {
         public string text;
@@ -83,13 +83,19 @@ namespace Beeffudge.Server.GameLogic {
         }
 
         public void selectAnswer (Player selectingPlayer, Answer answer) {
-            if (!playersSelectedAnswers.ContainsKey(selectingPlayer)) {
-                playersSelectedAnswers.Add(selectingPlayer, answer);
-            }
+            playersSelectedAnswers.Add(selectingPlayer, answer);
         }
 
         public List<Answer> getAllAnswers () {
             return answers;
+        }
+
+        public List<string> getAllAnswersAsStrings () {
+            List<string> retList = new List<string>();
+            for (int i = 0; i < answers.Count; i++) {
+                retList.Add(answers[i].text);
+            }
+            return retList;
         }
     }
 
@@ -97,7 +103,7 @@ namespace Beeffudge.Server.GameLogic {
     class GameController {
         public static int maxPlayers = 4;
         public static int minPlayers = 2;
-        public static float answerTime = 15;
+        public static float answerTime = 30;
         public static float showAnswerTime = 30;
         public static int maxRounds = 4;
         public static int scorePerWrongAnswer = 200;
@@ -112,8 +118,6 @@ namespace Beeffudge.Server.GameLogic {
         public int currentRound;
         public bool answeringOpen = false;
         private bool questionReady;
-        private bool answersReady = false;
-        public MyServer server;
 
         public bool QuestionReady {
             get {
@@ -123,25 +127,17 @@ namespace Beeffudge.Server.GameLogic {
             }
         }
 
-        public bool AnswersReady {
-            get {
-                bool returnValue = answersReady;
-                answersReady = false;
-                return returnValue;
-            }
-        }
-        private GameController (MyServer server) {
+        private GameController () {
             gameID = Guid.NewGuid().ToString();
             gameStarted = false;
             players = new List<Player>();
             questionsAsked = new List<QA>();
             //questionReady = true;
             currentRound = 0;
-            this.server = server;
         }
 
-        public static GameController createGame (MyServer server) {
-            return new GameController(server);
+        public static GameController createGame () {
+            return new GameController();
         }
 
         //join game
@@ -162,13 +158,6 @@ namespace Beeffudge.Server.GameLogic {
             questionsAsked.Last().selectAnswer(player, answer);
         }
 
-        public void selectQuestion(string player, string answer) {
-            QA currentQA = questionsAsked.Last();
-            Answer chosenAnswer = currentQA.answers.First(ans => ans.text == answer);
-            Player choosingPlayer = getPlayerByName(player);
-            selectQuestion(choosingPlayer, chosenAnswer);
-        }
-
         public void selectQuestion(PlayerAnswer plrAnswer) {
             questionsAsked.Last().selectAnswer(plrAnswer.player, plrAnswer.answer);
         }
@@ -184,10 +173,9 @@ namespace Beeffudge.Server.GameLogic {
 
         public bool tryStartGame () {
             gameStarted = players.Count >= minPlayers;
-            /*if (gameStarted) {
+            if (gameStarted) {
                 startAnsweringTimer();
-            }*/
-            questionReady = true;
+            }
             return gameStarted;
         }
 
@@ -199,18 +187,12 @@ namespace Beeffudge.Server.GameLogic {
         }
 
         public string askQuestion () {
-            List<Question> questions = new List<Question>();
-            for (int i = 0; i < questionsAsked.Count; i++) {
-                questions.Add(questionsAsked[i].question);
-            }
-            Question newQuestion = GameDBManager.getQuestion(questions);
-            server.PublishChatMessage("Category: " + newQuestion.category);
+            Question newQuestion = GameDBManager.getQuestion();
             QA newQA = new QA(newQuestion);
             questionsAsked.Add(newQA);
             answeringOpen = true;
-            //questionReady = true;
-            startAnsweringTimer();
-            return JsonMapper.ToJson(newQA);
+            questionReady = true;
+            return JsonMapper.ToJson(newQuestion);
         }
 
 
@@ -220,6 +202,7 @@ namespace Beeffudge.Server.GameLogic {
         }
 
         public void startAnsweringTimer () {
+            questionReady = true;
             timer = new Timer(answerTime * 1000);
             timer.AutoReset = false;
             timer.Elapsed += showAnswersEvent;
@@ -227,7 +210,6 @@ namespace Beeffudge.Server.GameLogic {
         }
 
         public void startShowAnswersTimer () {
-            answersReady = true;
             timer = new Timer(showAnswerTime * 1000);
             timer.AutoReset = false;
             timer.Elapsed += askQuestionOrEndGame;
@@ -236,22 +218,17 @@ namespace Beeffudge.Server.GameLogic {
 
         private void showAnswersEvent (Object source, ElapsedEventArgs e) {
             answeringOpen = false;
-            //QA currentQuestion = questionsAsked.Last();
-            FillAnswersForNonAnsweringPlayers();
-            server.PublishQuestionWithAnswers();
-            startShowAnswersTimer();
+            QA currentQuestion = questionsAsked.Last();
             //show answers
         }
 
         private void askQuestionOrEndGame (Object source, ElapsedEventArgs e) {
             calculateScores();
-            server.PublishChatMessage(calculateCurrentScoreboard());
             if (currentRound == maxRounds) {
                 endGame();
             } else {
                 currentRound++;
-                questionReady = true;
-                //askQuestion();
+                askQuestion();
             }
         }
 
@@ -273,18 +250,7 @@ namespace Beeffudge.Server.GameLogic {
             return retScores;
         }
 
-        public void FillAnswersForNonAnsweringPlayers () {
-            QA currentQuestion = questionsAsked.Last();
-            for (int i = 0; i < players.Count; i++) {
-                if (!currentQuestion.answers.Exists(ans => ans.creator == players[i])) {
-                    currentQuestion.answerQuestion(players[i], "", true);
-                }
-            }
-        }
-
         private void endGame () {
-            server.PublishChatMessage("Game has ended! Final Results are:");
-            server.PublishChatMessage(calculateCurrentScoreboard());
 
         }
     }

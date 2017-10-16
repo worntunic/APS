@@ -43,6 +43,9 @@
       <HintPath>..\packages\clrzmq.2.2.5\lib\clrzmq-ext.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="LitJson">
+      <HintPath>..\Beeffudge.Server\LitJson.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -92,6 +95,11 @@
     <Compile Include="Forms\Username.Designer.cs">
       <DependentUpon>Username.cs</DependentUpon>
     </Compile>
+    <Compile Include="GameLogic\GameController.cs" />
+    <Compile Include="GameLogic\GameDBManager.cs" />
+    <Compile Include="GameLogic\GameObjects\Player.cs" />
+    <Compile Include="GameLogic\GameObjects\Question.cs" />
+    <Compile Include="GameLogic\Utils.cs" />
     <Compile Include="MessagePassing\MessagePassing.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

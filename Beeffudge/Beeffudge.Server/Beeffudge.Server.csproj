@@ -35,6 +35,8 @@
     <Reference Include="clrzmq, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\+Nj\[C#] Projects\ZeroMQ\ZeroMQ_Server\bin\Debug\clrzmq.dll</HintPath>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>..\..\..\..\..\media library\image upload test\MLImageUpload\MLImageUpload\MLImageUpload\LitJson.dll</HintPath>
